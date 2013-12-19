@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>script.alfred.stocksearch</string>
+	<key>connections</key>
+	<dict/>
+	<key>createdby</key>
+	<string>Rex Li</string>
+	<key>description</key>
+	<string>show stock info</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Taiwan Stock Query</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>s</string>
+				<key>runningsubtext</key>
+				<string>查詢中請稍後......</string>
+				<key>script</key>
+				<string>require_once 'TWStockQuery.php';
+StockQuery('{query}');</string>
+				<key>subtext</key>
+				<string>使用google stock api</string>
+				<key>title</key>
+				<string>請輸入股票代號</string>
+				<key>type</key>
+				<integer>1</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>2D2759A4-8514-44DF-A1B7-3E49ED58E331</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>2D2759A4-8514-44DF-A1B7-3E49ED58E331</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>https://github.com/r030515495/AlfredTaiwanStockQuery</string>
+</dict>
+</plist>
