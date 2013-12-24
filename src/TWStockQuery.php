@@ -1,15 +1,21 @@
 <?php
+require_once('workflows.php');
 
 function StockQuery($request)
 {
 	$requestParts = explode(' ', $request);
+
 	if(count($requestParts) >= 2 ){
-		if($requestParts[0] == "add"){
-			add($requestParts[1]);
-		} else if($requestParts[0] == "delete"){
-			deleteKey($requestParts[1]);
+		$querystring = preg_split('/\s+/', trim(stripslashes($request)));
+		$cmd = $querystring[0];
+		$num = $querystring[1];
+		$length  = strlen($num);
+		if($cmd == "add" && $length == 4){
+			add($num);
+		} else if($cmd == "delete" && $length == 4){
+			deleteKey($num);
 		} else {
-			echo "執行有誤";
+			message("支援的參數為 add delete list ");
 		}
 	} else{
 		if($request == "list"){
@@ -19,17 +25,7 @@ function StockQuery($request)
 		}
 
 	}
-
-	//echo $result;
-
 }
-
-
-
-
-
-$dirname = dirname(__FILE__);
-
 
 function base($request){
 	if(!is_numeric($request)){
@@ -52,15 +48,14 @@ function base($request){
 				foreach (($json -> result) as $key => $value) {
 					$num= $key;
 				}
-				$url = 'http://mis.tse.com.tw/data/'.$num.'.csv?r='.$num;
 			}
 		}
 
     } else {
-		$url = 'http://mis.tse.com.tw/data/'.$request.'.csv?r='.$request;
+    	$num = $request;
     }
 	$result = '<?xml version="1.0" encoding="utf-8"?><items>';
-    $result .=queryStock($request);
+    $result .=queryStock($num);
 	$result .= '</items>';
 	echo $result;
 }
@@ -104,22 +99,25 @@ function queryStock($no){
 		}
 	return $result;
 }
+
+
+
 function add($no){
 	$fileName = 'results.json';
 	$handle = fopen($fileName, "r");
 	$contents = fread($handle, filesize($fileName));
 	fclose($handle);
 	$json = json_decode($contents, true);
-	echo $contents;
 	if(in_array($no, $json)){
-		echo $no." "."已經存在";
-		echo "\n";
+		message($no.'  已經重複了');
 	} else {
-		$json[] = $no;
+		message($no.'  增加成功');
+		$json []=$no;
 	}
 	$fp = fopen($fileName, 'w');
 	fwrite($fp, json_encode($json));
 	fclose($fp);
+
 }
 
 function listAll(){
@@ -145,6 +143,7 @@ function deleteKey($no){
 	foreach ($json as $i => $value) {
 	    if($json[$i] == $no){
 	    	unset($json[$i]);
+	    	message($no." 刪除成功");
 	    }
 	}
 	$fp = fopen($fileName, 'w');
@@ -152,14 +151,18 @@ function deleteKey($no){
 	fclose($fp);
 }
 
-
+function message($title, $detail = "") {
+   $w = new Workflows();
+   $w -> result('0','null',$title,$detail,'icon.png');
+   echo $w->toxml();
+   echo "\n";
+}
 // StockQuery("1234"); //正確的
 // StockQuery("12345"); //錯誤的
 // StockQuery("鴻海");// 正確的
 // StockQuery("馬英九");//錯誤的
+// StockQuery("delete 0060");//delete stock
 // StockQuery("list");//查詢list
-// StockQuery("delete 2526");//delete stock
-// StockQuery("list");//查詢list
-// StockQuery("add 2526");//add stock
+// StockQuery("add 0060");//add stock
 // StockQuery("list");//查詢list
 ?>

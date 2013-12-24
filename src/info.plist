@@ -29,9 +29,9 @@
 				<string>查詢中請稍後......</string>
 				<key>script</key>
 				<string>require_once 'TWStockQuery.php';
-StockQuery('{query}');</string>
+StockQuery("{query}");</string>
 				<key>subtext</key>
-				<string>使用google stock api</string>
+				<string>台灣股票查詢</string>
 				<key>title</key>
 				<string>請輸入股票代號</string>
 				<key>type</key>
