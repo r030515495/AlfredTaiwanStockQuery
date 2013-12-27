@@ -7,18 +7,18 @@ function StockQuery($request)
 
 	if(count($requestParts) >= 2 ){
 		$querystring = preg_split('/\s+/', trim(stripslashes($request)));
-		$cmd = $querystring[0];
+		$cmd = strtoupper($querystring[0]);
 		$num = $querystring[1];
 		$length  = strlen($num);
-		if($cmd == "add" && $length == 4){
+		if($cmd == "ADD" && $length == 4){
 			add($num);
-		} else if($cmd == "delete" && $length == 4){
+		} else if($cmd == "DELETET" && $length == 4){
 			deleteKey($num);
 		} else {
 			message("支援的參數為 add delete list ");
 		}
 	} else{
-		if($request == "list"){
+		if(strtoupper($request) == "LIST"){
 			listAll();
 		} else {
 			base($request);
@@ -52,7 +52,7 @@ function base($request){
 		}
 
     } else {
-    	$num = $request;
+    	$num = addZeroBefore($request,4);
     }
 	$result = '<?xml version="1.0" encoding="utf-8"?><items>';
     $result .=queryStock($num);
@@ -157,6 +157,18 @@ function message($title, $detail = "") {
    echo $w->toxml();
    echo "\n";
 }
+
+function addZeroBefore($no ,$len){
+	$result = "";
+	$wordLine = strlen($no);
+	if(strlen($no) < $len ){
+		for($x = 0 , $total = $len - strlen($no) ;$x < $total ; $x++){
+			$result.="0";
+		}
+	}
+	return $result.$no;
+}
+// work();
 // StockQuery("1234"); //正確的
 // StockQuery("12345"); //錯誤的
 // StockQuery("鴻海");// 正確的
