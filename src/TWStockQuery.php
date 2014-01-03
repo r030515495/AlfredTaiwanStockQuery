@@ -14,6 +14,8 @@ function StockQuery($request)
 			add($num);
 		} else if($cmd == "DELETET" && $length == 4){
 			deleteKey($num);
+		} else if($cmd == "LIST"){
+			listAll();
 		} else {
 			message("支援的參數為 add delete list ");
 		}
