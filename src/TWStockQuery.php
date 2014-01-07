@@ -28,7 +28,9 @@ function StockQuery($request)
 
 	}
 }
-
+/**
+ * 根據目前輸入內容判斷是為股票名稱還是代碼
+ */
 function base($request){
 	if(!is_numeric($request)){
     	$numQueryUrl = 'http://goristock.appspot.com/API/searchstock?q='.urlencode($request);
@@ -61,7 +63,9 @@ function base($request){
 	$result .= '</items>';
 	echo $result;
 }
-
+/**
+ *查詢股票代碼
+ */
 function queryStock($no){
 	$url = 'http://mis.tse.com.tw/data/'.$no.'.csv?r='.$no;
 	$defaults = array(
@@ -103,7 +107,9 @@ function queryStock($no){
 }
 
 
-
+/**
+ *增加自選股號碼
+ */
 function add($no){
 	$fileName = 'results.json';
 	$handle = fopen($fileName, "r");
@@ -121,6 +127,9 @@ function add($no){
 	fclose($fp);
 
 }
+/**
+ * 顯示自選股清單
+ */
 
 function listAll(){
 	$fileName = 'results.json';
@@ -136,7 +145,9 @@ function listAll(){
 	echo $result;
 }
 
-
+/**
+ *刪除自選股號碼
+ */
 function deleteKey($no){
 	$fileName = 'results.json';
 	$handle = fopen($fileName, "r");
@@ -153,13 +164,18 @@ function deleteKey($no){
 	fclose($fp);
 }
 
+/**
+ *輸出alfred 訊息
+ */
 function message($title, $detail = "") {
    $w = new Workflows();
    $w -> result('0','null',$title,$detail,'icon.png');
    echo $w->toxml();
    echo "\n";
 }
-
+/**
+ * 字串前面補0
+ */
 function addZeroBefore($no ,$len){
 	$result = "";
 	$wordLine = strlen($no);
