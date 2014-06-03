@@ -12,7 +12,7 @@ function StockQuery($request)
 		$length  = strlen($num);
 		if($cmd == "ADD" && $length == 4){
 			add($num);
-		} else if($cmd == "DELETET" && $length == 4){
+		} else if($cmd == "DELETE" && $length == 4){
 			deleteKey($num);
 		} else if($cmd == "LIST"){
 			listAll();
