@@ -59,12 +59,57 @@ function base($request){
     	$num = addZeroBefore($request,4);
     }
 	$result = '<?xml version="1.0" encoding="utf-8"?><items>';
-    $result .=queryStock($num);
+    $result .=queryStock2($num);
 	$result .= '</items>';
 	echo $result;
 }
 /**
- *查詢股票代碼
+ *查詢股票代碼 
+ * 2014-06-03_代替原本壞掉的方法
+ *
+ */
+function queryStock2($no){
+	$today = date("Ymd"); 
+	$url = 'http://mis.tse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_'.$no.'.tw_'.$today.'&json=1';
+	$defaults = array(
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_URL => $url,
+			CURLOPT_FRESH_CONNECT => true
+		);
+	$ch  = curl_init();
+	curl_setopt_array($ch, $defaults);
+	$out = curl_exec($ch);
+	$err = curl_error($ch);
+	curl_close($ch);
+	$result = "";
+	if(!strrpos($out,"404 Not Found")){
+		$json = json_decode($out);
+		$value =new stdClass();;
+		$value -> name = $json -> msgArray[0] -> n;
+	    $value -> no   = $json -> msgArray[0] -> c;
+	    $value -> rang = number_format(doubleval($json -> msgArray[0] -> z) - doubleval($json -> msgArray[0] -> y), 2);
+	    if($value -> rang > 0){
+	    	$value -> rang = "+".$value -> rang ;
+		}
+	    $value -> time = $json -> msgArray[0] -> t;
+	    $value -> c = $json -> msgArray[0] -> z;
+		$result .= '<item uid="mtranslate">';
+		$result .= '<title>'.$value -> no.' '.$value -> name.' '.$value -> c.' '.$value -> rang.'</title>';
+		$result .= '<subtitle>最後更新時間：'.$value -> time.'</subtitle>';
+		$result .= '<icon>icon.png</icon>';
+		$result .= '</item>';
+	} else {
+		$result .= '<item uid="mtranslate">';
+		$result .= '<title>'.$no.'  沒有資料</title>';
+		$result .= '<icon>icon.png</icon>';
+		$result .= '</item>';
+	}
+	return $result;
+}
+/**
+ *查詢股票代碼 
+ * 2014-06-03_此查詢方法失效,可能網站被下下來的
+ *
  */
 function queryStock($no){
 	$url = 'http://mis.tse.com.tw/data/'.$no.'.csv?r='.$no;
@@ -138,8 +183,7 @@ function listAll(){
 	$json = json_decode($contents, true);
 	$result = '<?xml version="1.0" encoding="utf-8"?><items>';
 	foreach ($json as $i => $value) {
-    	$result .=queryStock($json[$i]);
-
+    	$result .=queryStock2($json[$i]);
 	}
 	$result .= '</items>';
 	echo $result;
@@ -186,7 +230,7 @@ function addZeroBefore($no ,$len){
 	}
 	return $result.$no;
 }
-// work();
+// test 
 // StockQuery("1234"); //正確的
 // StockQuery("12345"); //錯誤的
 // StockQuery("鴻海");// 正確的
@@ -195,4 +239,7 @@ function addZeroBefore($no ,$len){
 // StockQuery("list");//查詢list
 // StockQuery("add 0060");//add stock
 // StockQuery("list");//查詢list
+listAll();
+
+
 ?>
