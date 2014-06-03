@@ -82,9 +82,9 @@ function queryStock2($no){
 	$err = curl_error($ch);
 	curl_close($ch);
 	$result = "";
-	if(!strrpos($out,"404 Not Found")){
-		$json = json_decode($out);
-		$value =new stdClass();;
+	$json = json_decode($out);
+	if(count($json -> msgArray) > 0){
+		$value =new stdClass();
 		$value -> name = $json -> msgArray[0] -> n;
 	    $value -> no   = $json -> msgArray[0] -> c;
 	    $value -> rang = number_format(doubleval($json -> msgArray[0] -> z) - doubleval($json -> msgArray[0] -> y), 2);
@@ -239,7 +239,7 @@ function addZeroBefore($no ,$len){
 // StockQuery("list");//查詢list
 // StockQuery("add 0060");//add stock
 // StockQuery("list");//查詢list
-listAll();
+// listAll();
 
 
 ?>
