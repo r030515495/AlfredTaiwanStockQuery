@@ -1,5 +1,6 @@
 <?php
 require_once('workflows.php');
+date_default_timezone_set('Asia/Taipei');
 
 function StockQuery($request)
 {
@@ -64,12 +65,12 @@ function base($request){
 	echo $result;
 }
 /**
- *查詢股票代碼 
+ *查詢股票代碼
  * 2014-06-03_代替原本壞掉的方法
  *
  */
 function queryStock2($no){
-	$today = date("Ymd"); 
+	$today = date("Ymd");
 	$url = 'http://mis.tse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_'.$no.'.tw_'.$today.'&json=1';
 	$defaults = array(
 			CURLOPT_RETURNTRANSFER => true,
@@ -107,7 +108,7 @@ function queryStock2($no){
 	return $result;
 }
 /**
- *查詢股票代碼 
+ *查詢股票代碼
  * 2014-06-03_此查詢方法失效,可能網站被下下來的
  *
  */
@@ -230,7 +231,7 @@ function addZeroBefore($no ,$len){
 	}
 	return $result.$no;
 }
-// test 
+// test
 // StockQuery("1234"); //正確的
 // StockQuery("12345"); //錯誤的
 // StockQuery("鴻海");// 正確的
